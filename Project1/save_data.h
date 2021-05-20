@@ -1,4 +1,4 @@
 #pragma once
 
-void SaveInputString(WordClass* wordClass, int numberSafe);
+void SaveInputString(WordClass* wordClass);
 void SaveChangeString(WordClass* wordClass, int numberSafe);

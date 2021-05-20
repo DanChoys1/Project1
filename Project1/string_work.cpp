@@ -35,11 +35,8 @@ void StringInterface(void) {
 	} while (numberSafe <= 0);
 
 	
-	SaveInputString(wordClass, numberSafe);
-
+	SaveInputString(wordClass);
+	//для создания ветви//
 	cout << endl << "Сохранение данных по кол-ву." << endl;
-	SaveChangeString(wordClass, numberSafe);	
-
-	cout << endl << "Сохранение данных по алфавиту." << endl;
 	SaveChangeString(wordClass, numberSafe);
 }

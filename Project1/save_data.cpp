@@ -6,7 +6,7 @@
 
 using namespace std;
 
-void SaveInputString(WordClass* wordClass, int numberSafe) {
+void SaveInputString(WordClass* wordClass) {
 	//cout << endl << "Хотите сохранить введённый текст в файл?" << endl;
 
 	//string choice = "";
@@ -34,7 +34,7 @@ void SaveInputString(WordClass* wordClass, int numberSafe) {
 		file.close();*/
 	//}
 
-	ofstream file("Logo.txt", ios::app);
+	ofstream file("Logo", ios::app);
 
 	wordClass->safeWordStruct(file);
 
@@ -65,6 +65,7 @@ void SaveChangeString(WordClass* wordClass, int numberSafe) {
 		file = OpenFileOutput();
 
 		wordClass->safeWordsByNumberInFile(file, numberSafe);
+		file << endl;
 		wordClass->safeWordsAlphabeticallyInFile(file, numberSafe);
 
 		file.close();
