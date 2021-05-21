@@ -14,29 +14,15 @@ void StringInterface(void) {
 	WordClass* wordClass = inp->Read();
 
 	cout << endl << "Слова:" << endl;
-	wordClass->printWordStruct();
+	wordClass->printWord();
 
-	cout << endl << endl << "Слова по кол-ву:" << endl;
-	wordClass->printWordsByNumber();
+	cout << endl << endl << "Слова полиндромы:" << endl;
+	wordClass->printPalindromeWord();
 	
-	cout << endl << endl << "Слова по алфавиту:" << endl;
-	wordClass->printWordsAlphabetically();
-
-	int numberSafe = 0;
-
-	do {
-		cout << endl << "Количество сохраняемых слов: ";
-		cin >> numberSafe;
-
-		if (numberSafe <= 0) {
-			cout << "Не будь дураком!" << endl;
-		}
-
-	} while (numberSafe <= 0);
-
+	cout << endl << endl << "Перевернутые слова:" << endl;
+	wordClass->printReverseWord();
 	
-	SaveInputString(wordClass);
-	//для создания ветви//
-	cout << endl << "Сохранение данных по кол-ву." << endl;
-	SaveChangeString(wordClass, numberSafe);
+	//SaveInputString(wordClass);
+
+	//SaveChangeString(wordClass);
 }

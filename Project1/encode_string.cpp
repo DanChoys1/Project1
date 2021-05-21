@@ -10,11 +10,22 @@ void WordClass::operator += (string sentence) {
 	_sentence[_sentenceNumber - 1] = sentence;
 
 	addWords();
-
-	initializWordsByNumber();
-
-	initializWordsAlphabetically();
 }
+
+template <class T>
+T* WordClass::changeSizeElement(T *element, int &size) {
+	T *newElement = new T[size];
+
+	for (int i = 0; i < size - 1; i++) {
+		newElement[i] = element[i];
+	}
+
+	if (element != nullptr) {
+		delete[] element;
+	}
+
+	return newElement;
+};
 
 void WordClass::addWords(void) {
 	string safeWord = "";
@@ -25,11 +36,11 @@ void WordClass::addWords(void) {
 			(characterNumber == static_cast<int>(_sentence[_sentenceNumber - 1].length()))) && (safeWord != "")) {
 
 			if (isNewWord(safeWord) == true) {
-				_wordNumber++;
+				_wordsNumber++;
 
-				_wordStruct = changeSizeElement(_wordStruct, _wordNumber);
-				_wordStruct[_wordNumber - 1].word = safeWord;
-				_wordStruct[_wordNumber - 1].number++;
+				_word = changeSizeElement(_word, _wordsNumber);
+				_word[_wordsNumber - 1] = safeWord;
+				initializWords();
 			}
 
 			safeWord = "";
@@ -44,9 +55,8 @@ void WordClass::addWords(void) {
 }
 
 bool WordClass::isNewWord(string word) {
-	for (int i = 0; i < _wordNumber; i++) {
-		if (_wordStruct[i].word == word) {
-			_wordStruct[i].number++;
+	for (int i = 0; i < _wordsNumber; i++) {
+		if (_word[i] == word) {
 			return false;
 		}
 	}
@@ -54,123 +64,65 @@ bool WordClass::isNewWord(string word) {
 	return true;
 }
 
-void WordClass::initializWordsByNumber() {
-	_wordsByNumber = new WordStruct[_wordNumber];
+void WordClass::initializWords(void) {
+	string reversWord = "";
 
-	for (int i = 0; i < _wordNumber; i++) {
-		_wordsByNumber[i].word = _wordStruct[i].word;
-		_wordsByNumber[i].number = _wordStruct[i].number;
+	for (int j = static_cast<int>(_word[_wordsNumber - 1].length()) - 1; j >= 0; j--) {
+		reversWord += _word[_wordsNumber - 1][j];
 	}
 
-	sortWordsByNumber();
-}
+	if (!reversWord.compare(_word[_wordsNumber - 1])) {
+		initializPalindromeWord(_word[_wordsNumber - 1], reversWord);
+		return;
+	}
 
-void WordClass::sortWordsByNumber() {
-	for (int k = _wordNumber - 1; k > 0; k--) {
-		int cycle_permutations = 0;
-
-		for (int i = 0; i < k; i++) {
-
-			if (_wordsByNumber[i].number > _wordsByNumber[i + 1].number) {
-				swap(_wordsByNumber[i], _wordsByNumber[i + 1]);
-				cycle_permutations++;
-			}
-
-		}
-
-		if (cycle_permutations == 0) {
+	for (int k = 0; k < _wordsNumber - 1; k++) {
+		if (!reversWord.compare(_word[k])) {
+			initializReverseWord(_word[_wordsNumber - 1], reversWord);
 			break;
 		}
+	}	
+}
+
+void WordClass::initializPalindromeWord(string word, string reverseWord) {
+	_palindromeWordsNumber++;
+	_palindromeWord = changeSizeElement(_palindromeWord, _palindromeWordsNumber);
+
+	_palindromeWord[_palindromeWordsNumber - 1].normal= word;
+	_palindromeWord[_palindromeWordsNumber - 1].reverse = reverseWord;
+}
+
+void WordClass::initializReverseWord(string word, string reverseWord) {
+	_reverseWordsNumber++;
+	_reverseWord = changeSizeElement(_reverseWord, _reverseWordsNumber);
+
+	_reverseWord[_reverseWordsNumber - 1].normal = word;
+	_reverseWord[_reverseWordsNumber - 1].reverse = reverseWord;
+}
+
+void WordClass::printWord(void) {
+	for (int i = 0; i < _wordsNumber; i++) {
+		cout << i + 1 << ")" << _word[i] << endl;
 	}
 }
 
-void WordClass::initializWordsAlphabetically(void) {
-	_wordsAlphabetically = new WordStruct[_wordNumber];
-
-	for (int i = 0; i < _wordNumber; i++) {
-		_wordsAlphabetically[i].word = _wordStruct[i].word;
-		_wordsAlphabetically[i].number = _wordStruct[i].number;
-	}
-
-	sortWordsAlphabetically();
-}
-
-void WordClass::sortWordsAlphabetically(void) {
-	const int firstLetter = 0;
-
-	for (int k = _wordNumber - 1; k > 0; k--) {
-		int cycle_permutations = 0;
-
-		for (int i = 0; i < k; i++) {
-
-			if (_wordsAlphabetically[i].word[firstLetter] > _wordsAlphabetically[i + 1].word[firstLetter]) {
-				swap(_wordsAlphabetically[i], _wordsAlphabetically[i + 1]);
-				cycle_permutations++;
-			}
-
-		}
-
-		if (cycle_permutations == 0) {
-			break;
-		}
+void WordClass::printPalindromeWord(void) {
+	for (int i = 0; i < _palindromeWordsNumber; i++) {
+		cout << i + 1 << ")" << _palindromeWord[i].normal << " - " << _palindromeWord[i].reverse << endl;
 	}
 }
 
-void WordClass::printWordStruct(void) {
-	for (int i = 0; i < _wordNumber; i++) {
-		cout << _wordStruct[i].word << " - " << _wordStruct[i].number << endl;
+void WordClass::printReverseWord(void) {
+	for (int i = 0; i < _reverseWordsNumber; i++) {
+		cout << i + 1 << ")" << _reverseWord[i].normal << " - " << _reverseWord[i].reverse << endl;
 	}
-}
-
-void WordClass::printWordsByNumber(void) {
-	for (int i = 0; i < _wordNumber; i++) {
-		cout << _wordsByNumber[i].word << " - " << _wordsByNumber[i].number << endl;
-	}
-}
-
-void WordClass::printWordsAlphabetically(void) {
-	for (int i = 0; i < _wordNumber; i++) {
-		cout << _wordsAlphabetically[i].word << " - " << _wordsAlphabetically[i].number << endl;
-	}
-}
-
-void WordClass::safeWordStruct(ofstream &file, int number) {
-	for (int i = 0; i < number; i++) {
-		file << _wordStruct[i].word << " - " << _wordStruct[i].number << endl;
-	}
-
-	file << endl;
-}
-
-void WordClass::safeWordStruct(ofstream &file) {
-	for (int i = 0; i < _wordNumber; i++) {
-		file << _wordStruct[i].word << " - " << _wordStruct[i].number << endl;
-	}
-
-	file << endl;
-}
-
-void WordClass::safeWordsByNumberInFile(ofstream &file, int number) {
-	for (int i = 0; i < number; i++) {
-		file << _wordsByNumber[i].word << " - " << _wordsByNumber[i].number << endl;
-	}
-
-	file << endl;
-	}
-
-void WordClass::safeWordsAlphabeticallyInFile(ofstream &file, int number) {
-	for (int i = 0; i < number; i++) {
-		file << _wordsAlphabetically[i].word << " - " << _wordsAlphabetically[i].number << endl;
-	}
-
-	file << endl;
 }
 
 WordClass::~WordClass() {
 	if (_sentence != nullptr) {
 		delete[] _sentence;
-		delete[] _wordStruct;
-		delete[] _wordsAlphabetically;
-		delete[] _wordsByNumber;
+		delete[] _word;
+		delete[] _palindromeWord;
+		delete[] _reverseWord;
 	}
 }
